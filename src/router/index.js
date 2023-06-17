@@ -1,11 +1,13 @@
 //importamos vue-router
 import { createRouter, createWebHistory } from 'vue-router'
 //importamos los componentes de las vistas
-import Home from '@/views/Home.vue'
+import Inicio from '@/views/Inicio.vue'
+import Registro from '@/views/Registro.vue'
 
 //creamos las rutas
 const routes = [
-    {path: '/', name: 'Home', component: Home},
+    {path: '/', name: 'Inicio', component: Inicio},
+    {path: '/registro', name: 'Registro', component: Registro},
 ]
 
 //creamos el router
