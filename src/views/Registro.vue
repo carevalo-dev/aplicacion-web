@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 
 const labelPosition = 'top';
 
@@ -10,6 +10,58 @@ const formRegistro = reactive({
     contrasena: '',
     confirmarContrasena: '',
 })
+
+const reglasFormulario = ref(null)
+
+const reglasRegistro = reactive(
+    {
+        nombres: [
+            { required: true, message: 'Por favor ingrese su nombre', trigger: 'blur'}
+        ],
+        apellidos: [
+            { required: true, message: 'Por favor ingrese sus apellidos', trigger: 'blur'}
+        ],
+        correo: [
+            { required: true, message: 'Por favor ingrese su correo electrónico', trigger: 'blur'},
+            { type: 'email', message: 'Por favor ingrese un correo electrónico válido', trigger: 'blur'}
+        ],
+        contrasena: [
+            { required: true, message: 'Por favor ingrese su contraseña', trigger: 'blur'},
+            { min: 8, message: 'La contraseña debe tener al menos 8 caracteres', trigger: 'blur'}
+        ],
+        confirmarContrasena: [
+            { required: true, message: 'Por favor confirme su contraseña', trigger: 'blur'},
+            { min: 8, message: 'La contraseña debe tener al menos 8 caracteres', trigger: 'blur'},
+            {
+                validator: (rule, value) => {
+                    if (value === ""){
+                        return new Error('Por favor confirme su contraseña')
+                    } else if (value !== formRegistro.contrasena){
+                        return new Error('Las contraseñas no coinciden')
+                    } else {
+                        return true
+                    }
+                }, trigger: 'blur'
+            }
+        ]
+
+    }
+)
+
+const enviarFormulario = async () => {
+    const formulario = reglasFormulario.value
+    if(!formulario) return
+    await formulario.validate(async(valid) => {
+        if (valid) {
+            console.log('submit!');
+        } else {
+            console.log('error submit!!');
+            return false;
+        }
+    })
+}
+
+
 </script>
 <template>
     <div class="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -20,20 +72,43 @@ const formRegistro = reactive({
                 <el-form 
                 :model="formRegistro"
                 :label-position="labelPosition"
+                :rules="reglasRegistro"
+                ref="reglasFormulario"
+                class="space-y-6"
                 >
                     <el-row :gutter="10">
                         <el-col :span="12">
-                            <el-form-item label="Nombres">
+                            <el-form-item label="Nombres" prop="nombres">
                                 <el-input v-model="formRegistro.nombres" placeholder="Nombres" required clearable></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="Apellidos">
+                            <el-form-item label="Apellidos" prop="apellidos">
                                 <el-input v-model="formRegistro.apellidos" placeholder="Apellidos" required clearable></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
 
+                    <el-form-item label="Correo electrónico" prop="correo">
+                        <el-input v-model="formRegistro.correo" type="email" required clearable placeholder="Correo electrónico"></el-input>
+                    </el-form-item>
+
+                    <el-row :gutter="10">
+                        <el-col :span="12">
+                            <el-form-item label="Contraseña" prop="contrasena">
+                                <el-input v-model="formRegistro.contrasena" type="password" placeholder="Contraseña" required></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="Confirmar contraseña" prop="confirmarContrasena">
+                                <el-input v-model="formRegistro.confirmarContrasena" type="password" placeholder="Confirmar contraseña" required show-password></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+
+                    <el-button @click="enviarFormulario"  type="primary" class="w-full">
+                        Registrar
+                    </el-button>
                 </el-form>
             </div>
         </div>
