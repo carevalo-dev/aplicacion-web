@@ -2,6 +2,7 @@
 import { reactive, ref } from 'vue';
 
 const labelPosition = 'top';
+const mostrarContrasena = ref(false)
 
 const formRegistro = reactive({
     nombres: '',
@@ -48,10 +49,10 @@ const reglasRegistro = reactive(
     }
 )
 
-const enviarFormulario = async () => {
+const enviarFormulario = () => {
     const formulario = reglasFormulario.value
     if(!formulario) return
-    await formulario.validate(async(valid) => {
+     formulario.validate((valid) => {
         if (valid) {
             console.log('submit!');
         } else {
@@ -96,15 +97,19 @@ const enviarFormulario = async () => {
                     <el-row :gutter="10">
                         <el-col :span="12">
                             <el-form-item label="Contraseña" prop="contrasena">
-                                <el-input v-model="formRegistro.contrasena" type="password" placeholder="Contraseña" required></el-input>
+                                <el-input v-model="formRegistro.contrasena" :type="mostrarContrasena ? 'text' : 'password'" placeholder="Contraseña" required clearable></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="Confirmar contraseña" prop="confirmarContrasena">
-                                <el-input v-model="formRegistro.confirmarContrasena" type="password" placeholder="Confirmar contraseña" required show-password></el-input>
+                                <el-input v-model="formRegistro.confirmarContrasena" :type="mostrarContrasena ? 'text' : 'password'" placeholder="Confirmar contraseña" required clearable></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
+
+                    <el-form-item>
+                        <el-checkbox v-model="mostrarContrasena">Mostrar contraseña</el-checkbox>
+                    </el-form-item>
 
                     <el-button @click="enviarFormulario"  type="primary" class="w-full">
                         Registrar
