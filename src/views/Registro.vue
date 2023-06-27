@@ -1,5 +1,8 @@
 <script setup>
 import { reactive, ref } from 'vue';
+import {auth, db} from 'firebase'
+import {doc, setDoc } from 'firebase/firestore';
+import {createUserWithEmailAndPassword} from 'firebase/auth'
 
 const labelPosition = 'top';
 const mostrarContrasena = ref(false)
@@ -49,12 +52,27 @@ const reglasRegistro = reactive(
     }
 )
 
-const enviarFormulario = () => {
+const enviarFormulario = async () => {
     const formulario = reglasFormulario.value
     if(!formulario) return
-     formulario.validate((valid) => {
+    await formulario.validate(async(valid) => {
         if (valid) {
-            console.log('submit!');
+            try {
+                const usuario = await createUserWithEmailAndPassword(auth, formRegistro.correo, formRegistro.contrasena)
+
+                const docRef = doc(db, 'usuarios', user.uid)
+
+                await setDoc(docRef, {
+                    uid: user.uid,
+                    nombres: formRegistro.nombres,
+                    apellidos: formRegistro.apellidos,
+                    correo: formRegistro.correo,
+                })
+
+                console.log('Usuario registrado')
+            } catch (error) {
+                console.log(error)
+            }
         } else {
             console.log('error submit!!');
             return false;
