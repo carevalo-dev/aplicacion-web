@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from 'vue';
-import {auth, db} from 'firebase'
+import {auth, db} from '@/firebase'
 import {doc, setDoc } from 'firebase/firestore';
 import {createUserWithEmailAndPassword} from 'firebase/auth'
 
@@ -60,10 +60,10 @@ const enviarFormulario = async () => {
             try {
                 const usuario = await createUserWithEmailAndPassword(auth, formRegistro.correo, formRegistro.contrasena)
 
-                const docRef = doc(db, 'usuarios', user.uid)
+                const docRef = doc(db, 'usuarios', usuario.user.uid)
 
                 await setDoc(docRef, {
-                    uid: user.uid,
+                    uid: usuario.user.uid,
                     nombres: formRegistro.nombres,
                     apellidos: formRegistro.apellidos,
                     correo: formRegistro.correo,
