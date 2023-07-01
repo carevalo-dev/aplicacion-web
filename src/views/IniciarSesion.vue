@@ -1,11 +1,13 @@
 <script setup>
 
 import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { auth } from '@/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { ElLoading, ElMessage } from 'element-plus';
 
 const labelPosition = 'top';
+const rutas = useRouter()
 
 const formIniciarSesion = reactive({
     correo: '',
@@ -34,12 +36,13 @@ const iniciarSesion = async () => {
             .then((userCredential) => { 
             loading.close()
             const user = userCredential.user
+            rutas.push('/dashboard')
             })
             .catch((error) => {
                 loading.close()
                 const errorCode = error.code
                 const errorMessage = error.message
-                ElMessage.error(errorMessage)
+                ElMessage.error('error: ' + errorMessage)
             })
         } else {
             return false
