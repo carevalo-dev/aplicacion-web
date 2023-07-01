@@ -70,7 +70,7 @@ const iniciarSesion = async () => {
                     </el-form-item>
 
                     <el-form-item label="Contraseña" prop="contrasena" required>
-                        <el-input type="password" v-model="formIniciarSesion.contrasena"></el-input>
+                        <el-input type="password" v-model="formIniciarSesion.contrasena" show-password></el-input>
                     </el-form-item>
                     
                     <el-button type="primary" class="w-full" @click="iniciarSesion">Iniciar Sesión</el-button>
